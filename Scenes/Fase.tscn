@@ -1,0 +1,67 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Sprites/Background/Green.png" type="Texture" id=2]
+[ext_resource path="res://Scenes/TileMap.tscn" type="PackedScene" id=3]
+[ext_resource path="res://icon.png" type="Texture" id=4]
+[ext_resource path="res://Scenes/Cursor.tscn" type="PackedScene" id=5]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node2D
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+func _on_Area2D_area_entered(area):
+	print(\"Collision\")
+	$Player.animator.play(\"Hit\")
+"
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 32, 32 )
+
+[node name="Fase" type="Node2D"]
+script = SubResource( 2 )
+
+[node name="Green" type="Sprite" parent="."]
+position = Vector2( 504, 320 )
+scale = Vector2( 16.5, 8.75 )
+texture = ExtResource( 2 )
+
+[node name="TileMap" parent="." instance=ExtResource( 3 )]
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 320, 352 )
+
+[node name="Mira" parent="Player" instance=ExtResource( 5 )]
+position = Vector2( 3.05176e-05, 2.66667 )
+rotation = 0.0
+scale = Vector2( 0.333333, 0.333333 )
+
+[node name="Area2D" type="Area2D" parent="."]
+visible = false
+
+[node name="Sprite" type="Sprite" parent="Area2D"]
+position = Vector2( 672, 312 )
+scale = Vector2( 2, 8 )
+texture = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 672, 312 )
+scale = Vector2( 2, 8 )
+shape = SubResource( 1 )
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]
